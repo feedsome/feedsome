@@ -1,12 +1,3 @@
-buildscript {
-    repositories {
-        mavenCentral()
-    }
-    dependencies {
-        classpath "org.springframework.boot:spring-boot-gradle-plugin:${springBootVersion}"
-    }
-}
-
 plugins {
     id "java"
     id "maven"
@@ -15,31 +6,24 @@ plugins {
     id "eclipse"
 }
 
-apply plugin: "spring-boot"
+allprojects {
+    group 'com.feedsome'
 
-group 'com.feedsome'
+    sourceCompatibility = 1.8
+    targetCompatibility = 1.8
 
-sourceCompatibility = 1.8
-targetCompatibility = 1.8
+    repositories {
+        mavenCentral()
+        mavenLocal()
+    }
 
-repositories {
-    mavenCentral()
-    mavenLocal()
 }
-
 //
 // Task configuration
 //
 
 task wrapper(type: Wrapper) {
   gradleVersion = '3.1'
-}
-
-springBoot {
-    backupSource = false
-}
-
-bootRepackage {
 }
 
 

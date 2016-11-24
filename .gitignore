@@ -2,7 +2,7 @@
 
 
 ### mkdocs ###
-/docs/site/
+docs/site/
 
 ### Intellij ###
 .idea/
