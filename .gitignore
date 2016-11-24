@@ -1,3 +1,9 @@
+### feedsome ###
+
+
+### mkdocs ###
+/docs/site/
+
 ### Intellij ###
 .idea/
 *.iml
