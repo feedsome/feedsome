@@ -1,0 +1,29 @@
+### Intellij ###
+.idea/
+*.iml
+
+## File-based project format:
+*.iws
+
+## Plugin-specific files:
+
+# IntelliJ
+/out/
+
+# mpeltonen/sbt-idea plugin
+.idea_modules/
+
+### Gradle ###
+.gradle/
+
+# Ignoring Gradle wrapper files (could be aquired by running 'gradle wrapper' task)
+gradle/
+gradlew
+gradlew.bat
+/build/
+
+# Ignore Gradle GUI config
+gradle-app.setting
+
+# Cache of project
+.gradletasknamecache

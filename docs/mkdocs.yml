@@ -1,0 +1,38 @@
+# Project information
+site_name: 'feedsome'
+site_description: 'A simple, modular framework for developing context-aware applications'
+
+# Repository
+repo_name: 'GitHub'
+repo_url: 'https://github.com/feedsome/feedsome'
+
+# Documentation and theme
+docs_dir: 'src'
+
+theme: 'material'
+
+# Configuration options
+extra:
+  # version: '1.0-SNAPSHOT'
+  palette:
+    primary: 'indigo'
+    accent: 'light blue'
+  font:
+    text: 'Roboto'
+    code: 'Roboto Mono'
+  i18n:
+    prev: 'Previous'
+    next: 'Next'
+
+# Extensions
+markdown_extensions:
+  - codehilite(css_class=code)
+  - admonition
+  - toc:
+      permalink: '#'
+
+
+# Pages Routing definitions
+
+pages:
+  - Home: 'index.md'

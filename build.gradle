@@ -1,0 +1,54 @@
+buildscript {
+    repositories {
+        mavenCentral()
+    }
+    dependencies {
+        classpath "org.springframework.boot:spring-boot-gradle-plugin:${springBootVersion}"
+    }
+}
+
+plugins {
+    id "java"
+    id "maven"
+    id "maven-publish"
+    id "idea"
+    id "eclipse"
+}
+
+apply plugin: "spring-boot"
+
+group 'com.feedsome'
+
+sourceCompatibility = 1.8
+targetCompatibility = 1.8
+
+repositories {
+    mavenCentral()
+    mavenLocal()
+}
+
+//
+// Task configuration
+//
+
+task wrapper(type: Wrapper) {
+  gradleVersion = '3.1'
+}
+
+springBoot {
+    backupSource = false
+}
+
+bootRepackage {
+}
+
+
+//
+// Dependencies
+//
+
+dependencies {
+
+    // Test dependencies
+    testCompile group: 'junit', name: 'junit', version: '4.11'
+}
