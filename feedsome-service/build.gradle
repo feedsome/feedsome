@@ -1,0 +1,14 @@
+dependencies {
+    //Project dependencies
+    compile project(':feedsome-model')
+    compile project(':feedsome-repository')
+
+    // Spring dependencies
+    compile('org.springframework.boot:spring-boot-starter')
+    compile('org.springframework.boot:spring-boot-starter-validation')
+
+
+    // 3rd Party dependencies
+    compile('org.apache.commons:commons-lang3:3.0')
+
+}

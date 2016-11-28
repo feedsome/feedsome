@@ -1,4 +1,6 @@
 rootProject.name = 'feedsome'
-include 'feedsome-server'
 include 'docs'
+include 'feedsome-model'
+include 'feedsome-repository'
+include 'feedsome-service'
 
