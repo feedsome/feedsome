@@ -26,4 +26,6 @@ public class Plugin {
     @NotNull
     private Collection<String> categoryNames = new TreeSet<>();
 
+    private boolean active;
+
 }

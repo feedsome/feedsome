@@ -1,6 +1,7 @@
 package com.feedsome.service;
 
 import com.feedsome.model.Plugin;
+import com.feedsome.model.PluginRegistration;
 
 import javax.validation.constraints.NotNull;
 
@@ -16,7 +17,7 @@ public interface PluginService {
      * @return the newly registered plugin
      */
     @NotNull
-    Plugin register(@NotNull Plugin plugin);
+    Plugin register(@NotNull PluginRegistration plugin);
 
 
 }

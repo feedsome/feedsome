@@ -4,11 +4,20 @@ dependencies {
     compile project(':feedsome-repository')
 
     // Spring dependencies
-    compile('org.springframework.boot:spring-boot-starter')
-    compile('org.springframework.boot:spring-boot-starter-validation')
+    compile 'org.springframework.boot:spring-boot-starter'
+    compile 'org.springframework.boot:spring-boot-starter-validation'
+
+    // Camel dependencies
+    compile 'org.apache.camel:camel-spring-boot:2.18.0'
+    compile 'org.apache.camel:camel-rabbitmq:2.18.0'
+    compile 'org.apache.camel:camel-jackson:2.18.0'
 
 
     // 3rd Party dependencies
-    compile('org.apache.commons:commons-lang3:3.0')
+    compileOnly 'org.projectlombok:lombok:1.16.10'
+    compile 'com.fasterxml.jackson.datatype:jackson-datatype-jdk8:2.8.5'
+    compile 'com.fasterxml.jackson.datatype:jackson-datatype-jsr310:2.8.5'
+
+    compile 'biz.paluch.redis:lettuce:4.3.0.Final'
 
 }
