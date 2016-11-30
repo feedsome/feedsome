@@ -27,13 +27,10 @@ public class ServiceConfiguration {
     }
 
     @Bean
-    public FeedService feedService(@NotNull final PluginRepository pluginRepository, @NotNull final FeedRepository feedRepository) {
-        return new FeedServiceImpl(pluginRepository, feedRepository);
-    }
-
-    @Bean
-    public NotificationService notificationService() {
-        return new RedisNotificationService();
+    public FeedService feedService(@NotNull final PluginRepository pluginRepository,
+                                   @NotNull final CategoryRepository categoryRepository,
+                                   @NotNull final FeedRepository feedRepository) {
+        return new FeedServiceImpl(pluginRepository, categoryRepository, feedRepository);
     }
 
 }

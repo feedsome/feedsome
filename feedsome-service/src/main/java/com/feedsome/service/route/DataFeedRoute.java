@@ -54,15 +54,47 @@ public class DataFeedRoute {
                         .retryAttemptedLogLevel(LoggingLevel.WARN)
                         .retriesExhaustedLogLevel(LoggingLevel.ERROR);
 
-                from(endpointProperties.getDataFeedUir()).routeId("Data feed route")
+                from(endpointProperties.getDataFeedUri()).routeId("Data feed route")
                         .filter(body().isNotNull())
-                        .log("received plugin registration request")
+                        .log("received data feed request from DAQ")
                         .log("JSON message: ${body}")
                         .unmarshal(dataFormat)
-                        .log("parsed message to " + FeedNotification.class.getSimpleName())
+                        .log(String.format("parsed message to %s object", FeedNotification.class.getSimpleName()))
                         .bean(feedService, "persistNotification")
+                        .log("feed has been persisted to the system. Now sending it for process...")
+                        .to(endpointProperties.getDataFeedProcessUri());
+            }
+        };
+    }
 
-                        .log("plugin with name: ${body.name} has been registered");
+    @Bean
+    public RouteBuilder dataFeedProcessRouteBuilder() {
+        return new RouteBuilder() {
+            @Override
+            public void configure() throws Exception {
+                onException(ConstraintViolationException.class)
+                        .logRetryStackTrace(true)
+                        .logStackTrace(true)
+                        .logHandled(true)
+                        .retryAttemptedLogLevel(LoggingLevel.WARN)
+                        .retriesExhaustedLogLevel(LoggingLevel.ERROR)
+                        .stop();
+
+                onException(Exception.class)
+                        .maximumRedeliveries(5)
+                        .redeliveryDelay(3000)
+                        .useExponentialBackOff()
+                        .logRetryStackTrace(true)
+                        .logStackTrace(true)
+                        .logHandled(true)
+                        .retryAttemptedLogLevel(LoggingLevel.WARN)
+                        .retriesExhaustedLogLevel(LoggingLevel.ERROR);
+
+                from(endpointProperties.getDataFeedProcessUri()).routeId("Data feed process route")
+                        .filter(body().isNotNull())
+                        .log("received data feed for processing")
+                        .log("currently no process actions exist, sending feed to notification route!")
+                        .to(endpointProperties.getDataFeedSenderUri());
             }
         };
     }

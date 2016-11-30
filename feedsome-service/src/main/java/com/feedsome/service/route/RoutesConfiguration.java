@@ -6,7 +6,8 @@ import org.springframework.context.annotation.Import;
 @Configuration
 @Import({
         PluginRegistrationRoute.class,
-        DataFeedRoute.class
+        DataFeedRoute.class,
+        DataFeedSendRoute.class
 })
 public class RoutesConfiguration {
 

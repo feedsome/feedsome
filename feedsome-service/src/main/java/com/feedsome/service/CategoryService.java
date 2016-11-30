@@ -15,17 +15,18 @@ import java.util.Optional;
 public interface CategoryService {
 
     /**
-     *
-     * @param pageable
-     * @return
+     * Provides all the available categories, as they have been defined by the plugins
+     * @param pageable the pagination criteria
+     * @return a {@link Page<Category>} with the requested {@link Category} instances.
      */
     @NotNull
     Page<Category> getAll(@NotNull Pageable pageable);
 
     /**
-     *
-     * @param category
-     * @return
+     * Creates and persists a category to the system
+     * @param category the {@link Category} instance to be created
+     * @return an {@link Optional<Category>} that wraps an actual {@link Category} instance,
+     *         or {@link Optional#empty()} if the creation process was not completed successfully.
      */
     @NotNull
     @UnwrapValidatedValue

@@ -9,6 +9,12 @@ public class EndpointProperties {
 
     private String pluginRegistrationUri;
 
-    private String dataFeedUir;
+    private String dataFeedUri;
+
+    private String dataFeedProcessUri = "direct:feed:process";
+
+    private String dataFeedSenderUri = "seda:feed:send";
+
+    private String dataFeedPublishUriRegex = "redis://localhost:6379?command=PUBLISH&channels=${channels}";
 
 }

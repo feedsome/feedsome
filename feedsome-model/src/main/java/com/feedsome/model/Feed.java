@@ -2,6 +2,7 @@ package com.feedsome.model;
 
 import lombok.AccessLevel;
 import lombok.Builder;
+import lombok.Getter;
 import lombok.Setter;
 import org.hibernate.validator.constraints.NotEmpty;
 import org.springframework.data.annotation.Id;
@@ -15,34 +16,39 @@ import java.util.Collection;
 import java.util.HashSet;
 
 
-@Builder
 @Document(collection = "feeds")
 @TypeAlias("feed")
+@Builder
 public class Feed {
 
     @Id
+    @Getter
     private String id;
 
     @DBRef
     @NotEmpty
     @Setter(AccessLevel.NONE)
-    private final Plugin pluginReference;
+    @Getter
+    private Plugin plugin;
 
     @NotEmpty
     @Size(min = 5, max = 30)
     @Setter(AccessLevel.NONE)
-    private final String title;
-
-    @NotEmpty
-    @Size(min = 20, max = 100)
-    @Setter(AccessLevel.NONE)
-    private final String description;
+    @Getter
+    private String title;
 
     @NotEmpty
     @Setter(AccessLevel.NONE)
-    private final String body;
+    @Getter
+    private String body;
+
+    @DBRef
+    @NotEmpty
+    @Getter
+    private final Collection<Category> categories = new HashSet<>();
 
     @NotNull
+    @Getter
     private final Collection<String> tags = new HashSet<>();
 
 }

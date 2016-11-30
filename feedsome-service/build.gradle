@@ -10,14 +10,14 @@ dependencies {
     // Camel dependencies
     compile 'org.apache.camel:camel-spring-boot:2.18.0'
     compile 'org.apache.camel:camel-rabbitmq:2.18.0'
+    compile 'org.apache.camel:camel-spring-redis:2.18.0'
     compile 'org.apache.camel:camel-jackson:2.18.0'
 
 
     // 3rd Party dependencies
     compileOnly 'org.projectlombok:lombok:1.16.10'
+    compile 'commons-lang:commons-lang:2.6'
     compile 'com.fasterxml.jackson.datatype:jackson-datatype-jdk8:2.8.5'
     compile 'com.fasterxml.jackson.datatype:jackson-datatype-jsr310:2.8.5'
-
-    compile 'biz.paluch.redis:lettuce:4.3.0.Final'
 
 }

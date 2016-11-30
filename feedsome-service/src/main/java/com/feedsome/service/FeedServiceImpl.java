@@ -1,25 +1,33 @@
 package com.feedsome.service;
 
+import com.feedsome.model.Category;
 import com.feedsome.model.Feed;
 import com.feedsome.model.FeedNotification;
 import com.feedsome.model.Plugin;
+import com.feedsome.repository.CategoryRepository;
 import com.feedsome.repository.FeedRepository;
 import com.feedsome.repository.PluginRepository;
 import org.hibernate.validator.valuehandling.UnwrapValidatedValue;
 import org.springframework.validation.annotation.Validated;
 
 import javax.validation.constraints.NotNull;
+import java.util.Collection;
 import java.util.Optional;
 
 @Validated
 public class FeedServiceImpl implements FeedService {
 
     private final PluginRepository pluginRepository;
+    private final CategoryRepository categoryRepository;
+
     private final FeedRepository feedRepository;
 
+
     public FeedServiceImpl(@NotNull final PluginRepository pluginRepository,
+                           @NotNull final CategoryRepository categoryRepository,
                            @NotNull final FeedRepository feedRepository) {
         this.pluginRepository = pluginRepository;
+        this.categoryRepository = categoryRepository;
         this.feedRepository = feedRepository;
     }
 
@@ -27,18 +35,22 @@ public class FeedServiceImpl implements FeedService {
     @NotNull
     @UnwrapValidatedValue
     public Feed persistNotification(@NotNull final FeedNotification feedNotification) {
-        Optional<Plugin> plugin = pluginRepository.findByName(feedNotification.getPluginRef());
+        final Optional<Plugin> plugin = pluginRepository.findByName(feedNotification.getPluginRef());
         if(!plugin.isPresent()) {
             //TODO: handle (exception to send to dead channel)
             throw new RuntimeException();
         }
 
         final Feed feed = Feed.builder()
-                .pluginReference(plugin.get())
+                .plugin(plugin.get())
                 .title(feedNotification.getTitle())
-                .description(feedNotification.getDescription())
                 .body(feedNotification.getBody())
                 .build();
+
+        final Collection<Category> categories = categoryRepository.findByNameIn(
+                feedNotification.getCategories());
+
+        feed.getCategories().addAll(categories);
 
         return feedRepository.save(feed);
     }
