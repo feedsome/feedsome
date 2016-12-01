@@ -3,7 +3,7 @@ package com.feedsome.service;
 import com.feedsome.repository.CategoryRepository;
 import com.feedsome.repository.FeedRepository;
 import com.feedsome.repository.PluginRepository;
-import com.feedsome.service.route.RoutesConfiguration;
+import com.feedsome.service.route.configuration.RoutesConfiguration;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Import;

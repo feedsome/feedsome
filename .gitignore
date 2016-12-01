@@ -6,7 +6,6 @@ docs/site/
 
 ### Intellij ###
 .idea/
-*.iml
 
 ## File-based project format:
 *.iws

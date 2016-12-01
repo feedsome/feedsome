@@ -20,4 +20,7 @@ dependencies {
     compile 'com.fasterxml.jackson.datatype:jackson-datatype-jdk8:2.8.5'
     compile 'com.fasterxml.jackson.datatype:jackson-datatype-jsr310:2.8.5'
 
+    // Test dependencies
+    testCompile 'com.github.kstyrc:embedded-redis:0.6'
+    testCompile 'org.springframework.boot:spring-boot-starter-test'
 }

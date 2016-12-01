@@ -5,6 +5,7 @@ import com.fasterxml.jackson.datatype.jdk8.Jdk8Module;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import com.feedsome.model.Category;
 import com.feedsome.model.Feed;
+import com.feedsome.service.route.configuration.EndpointProperties;
 import org.apache.camel.LoggingLevel;
 import org.apache.camel.builder.RouteBuilder;
 import org.apache.camel.component.jackson.JacksonDataFormat;
@@ -18,8 +19,10 @@ import java.util.stream.Collectors;
 @Configuration
 @EnableConfigurationProperties(EndpointProperties.class)
 public class DataFeedSendRoute {
+
     private static final String CHANNELS_PARAM = "${channels}";
     private static final String PUBLISH_URI_HEADER = "PUBLISH_URI";
+    private static final String publishUriHeaderExpression = String.format("${header.%s}", PUBLISH_URI_HEADER);
 
     @Autowired
     private EndpointProperties endpointProperties;
@@ -68,8 +71,9 @@ public class DataFeedSendRoute {
                             processor.getIn().setHeader(PUBLISH_URI_HEADER, publishUri);
                         })
                         .marshal(dataFormat)
-                        .log(String.format("data feed topics ${header.%s}", PUBLISH_URI_HEADER))
-                        .recipientList(header(PUBLISH_URI_HEADER));
+                        .log("data feed topics " + publishUriHeaderExpression)
+                        .recipientList(simple(publishUriHeaderExpression));
+                        //.recipientList(header(PUBLISH_URI_HEADER));
             }
         };
 

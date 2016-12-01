@@ -1,0 +1,21 @@
+
+# Camel route
+camel:
+  endpoint:
+    plugin:
+      pluginRegistrationUri: "rabbitmq:///feedsome.plugin.registration?exchangeType=topic&autoDelete=false&durable=true&queue=fs-plugin-registration&autoAck=true&concurrentConsumers=5&deadLetterExchange=error&deadLetterExchangeType=topic&deadLetterRoutingKey=fs-plugin-registration&deadLetterQueue=fs-plugin-registration-error&connectionFactory=#customConnectionFactory"
+      dataFeedUri: "rabbitmq:///feedsome.plugin.feed?exchangeType=topic&autoDelete=false&durable=true&queue=fs-plugin-feed&autoAck=true&concurrentConsumers=10&deadLetterExchange=error&deadLetterExchangeType=topic&deadLetterRoutingKey=fs-plugin-feed&deadLetterQueue=fs-plugin-feed-error&connectionFactory=#customConnectionFactory"
+      dataFeedProcessUri: "direct:feed:process"
+      dataFeedSenderUri: "seda:feed:send"
+      dataFeedPublishUriRegex: "redis:///?command=PUBLISH&channels=${channels}&connectionFactory=#redisConnectionFactory"
+
+  connection:
+    rabbitmq:
+      host: "localhost"
+      port: "5672"
+      username: "camel"
+      password: "password"
+    redis:
+      hostname: "localhost"
+      port: "6379"
+      password: "password"

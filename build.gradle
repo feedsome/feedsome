@@ -23,6 +23,17 @@ allprojects {
         mavenLocal()
         mavenCentral()
     }
+
+    //
+    // Dependencies
+    //
+    dependencies {
+
+        // Test dependencies
+        testCompile "junit:junit:4.12"
+        testCompile "org.mockito:mockito-core:1.10.19"
+    }
+
 }
 
 subprojects {
@@ -43,16 +54,4 @@ subprojects {
 
 task wrapper(type: Wrapper) {
   gradleVersion = '3.1'
-}
-
-
-//
-// Dependencies
-//
-
-dependencies {
-
-    // Test dependencies
-    testCompile "junit:junit:4.11"
-    testCompile "org.mockito:mockito-core:1.10.19"
 }

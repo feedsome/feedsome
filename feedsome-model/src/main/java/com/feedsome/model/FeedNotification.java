@@ -1,34 +1,28 @@
 package com.feedsome.model;
 
-import lombok.Builder;
-import lombok.Getter;
+import lombok.Data;
 import org.hibernate.validator.constraints.NotEmpty;
 
 import javax.validation.constraints.NotNull;
 import java.util.Collection;
 import java.util.HashSet;
 
-@Builder
+@Data
 public class FeedNotification {
 
     @NotEmpty
-    @Getter
-    private final String pluginRef;
+    private String pluginRef;
 
     @NotEmpty
-    @Getter
-    private final String title;
+    private String title;
 
     @NotEmpty
-    @Getter
-    private final String body;
+    private String body;
 
     @NotEmpty
-    @Getter
-    private final Collection<String> categories = new HashSet<>();
+    private Collection<String> categories = new HashSet<>();
 
     @NotNull
-    @Getter
-    private final Collection<String> tags = new HashSet<>();
+    private Collection<String> tags = new HashSet<>();
 
 }

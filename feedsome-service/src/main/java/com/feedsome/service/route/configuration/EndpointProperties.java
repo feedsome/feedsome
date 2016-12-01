@@ -1,8 +1,11 @@
-package com.feedsome.service.route;
+package com.feedsome.service.route.configuration;
 
 import lombok.Data;
 import org.springframework.boot.context.properties.ConfigurationProperties;
 
+/**
+ * Camel routes endpoint properties
+ */
 @Data
 @ConfigurationProperties(prefix = "camel.endpoint.plugin")
 public class EndpointProperties {
@@ -15,6 +18,6 @@ public class EndpointProperties {
 
     private String dataFeedSenderUri = "seda:feed:send";
 
-    private String dataFeedPublishUriRegex = "redis://localhost:6379?command=PUBLISH&channels=${channels}";
+    private String dataFeedPublishUriRegex;
 
 }

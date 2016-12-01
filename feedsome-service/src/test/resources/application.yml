@@ -1,0 +1,10 @@
+
+# Camel route
+camel:
+  endpoint:
+    plugin:
+      pluginRegistrationUri: "seda:feedsome.plugin.registration?concurrentConsumers=5"
+      dataFeedUri: "seda:feedsome.plugin.feed?concurrentConsumers=10"
+      dataFeedProcessUri: "direct:feed:process"
+      dataFeedSenderUri: "seda:feed:send"
+      dataFeedPublishUriRegex: "redis://localhost:6379?command=PUBLISH&channels=${channels}&connectionFactory=#redisConnectionFactory"

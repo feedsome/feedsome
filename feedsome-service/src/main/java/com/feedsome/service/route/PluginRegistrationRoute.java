@@ -3,6 +3,7 @@ package com.feedsome.service.route;
 import com.fasterxml.jackson.datatype.jdk8.Jdk8Module;
 import com.feedsome.model.PluginRegistration;
 import com.feedsome.service.PluginService;
+import com.feedsome.service.route.configuration.EndpointProperties;
 import org.apache.camel.LoggingLevel;
 import org.apache.camel.builder.RouteBuilder;
 import org.apache.camel.component.jackson.JacksonDataFormat;
@@ -54,7 +55,8 @@ public class PluginRegistrationRoute {
                         .unmarshal(dataFormat)
                         .log("parsed plugin registration to " + PluginRegistration.class.getSimpleName())
                         .bean(pluginService, "register")
-                        .log("plugin with name: ${body.name} has been registered");
+                        .log("plugin with name: ${body.name} has been registered")
+                        .to("mock:plugin:registered");
             }
         };
     }
