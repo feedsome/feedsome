@@ -7,4 +7,4 @@ camel:
       dataFeedUri: "seda:feedsome.plugin.feed?concurrentConsumers=10"
       dataFeedProcessUri: "direct:feed:process"
       dataFeedSenderUri: "seda:feed:send"
-      dataFeedPublishUriRegex: "redis://localhost:6379?command=PUBLISH&channels=${channels}&connectionFactory=#redisConnectionFactory"
+      dataFeedPublishUri: "redis:///?command=PUBLISH&connectionFactory=#redisConnectionFactory"

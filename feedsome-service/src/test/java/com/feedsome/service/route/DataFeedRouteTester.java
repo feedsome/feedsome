@@ -11,7 +11,9 @@ import org.apache.camel.EndpointInject;
 import org.apache.camel.ProducerTemplate;
 import org.apache.camel.component.mock.MockEndpoint;
 import org.apache.camel.spring.boot.CamelAutoConfiguration;
-import org.junit.*;
+import org.junit.After;
+import org.junit.Before;
+import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
@@ -20,9 +22,7 @@ import org.springframework.context.annotation.Import;
 import org.springframework.context.annotation.PropertySource;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringRunner;
-import redis.embedded.RedisServer;
 
-import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.concurrent.TimeUnit;
@@ -62,30 +62,16 @@ public class DataFeedRouteTester {
 
         @Bean
         public EndpointProperties endpointProperties() {
-            EndpointProperties props = new EndpointProperties();
+            final EndpointProperties props = new EndpointProperties();
 
             props.setDataFeedUri("seda:feedsome:plugin:feed");
             props.setDataFeedProcessUri("direct:feed:process");
 
             props.setDataFeedSenderUri("mock:feedsome:processed");
 
-
             return props;
         }
 
-    }
-
-    private static RedisServer redisServer;
-
-    @BeforeClass
-    public static void setupRedis() throws IOException {
-        redisServer  = new RedisServer(6379);
-        redisServer.start();
-    }
-
-    @AfterClass
-    public static void stopRedis() {
-        redisServer.stop();
     }
 
     @Autowired

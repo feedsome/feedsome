@@ -6,6 +6,7 @@ import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import com.feedsome.model.FeedNotification;
 import com.feedsome.service.FeedService;
 import com.feedsome.service.route.configuration.EndpointProperties;
+import org.apache.camel.ExchangePattern;
 import org.apache.camel.LoggingLevel;
 import org.apache.camel.builder.RouteBuilder;
 import org.apache.camel.component.jackson.JacksonDataFormat;
@@ -19,6 +20,7 @@ import javax.validation.ConstraintViolationException;
 @Configuration
 @EnableConfigurationProperties(EndpointProperties.class)
 public class DataFeedRoute {
+    private final String dataFeedStoreUri = "seda:feed:store";
 
     @Autowired
     private EndpointProperties endpointProperties;
@@ -61,9 +63,32 @@ public class DataFeedRoute {
                         .log("JSON message: ${body}")
                         .unmarshal(dataFormat)
                         .log(String.format("parsed message to %s object", FeedNotification.class.getSimpleName()))
-                        .bean(feedService, "persistNotification")
+                        .to(ExchangePattern.OutOnly, dataFeedStoreUri)
                         .log("feed has been persisted to the system. Now sending it for process...")
                         .to(endpointProperties.getDataFeedProcessUri());
+            }
+        };
+    }
+
+    @Bean
+    public RouteBuilder dataFeedStoreRouteBuilder() {
+        return new RouteBuilder() {
+            @Override
+            public void configure() throws Exception {
+                onException(Exception.class)
+                        .maximumRedeliveries(5)
+                        .redeliveryDelay(3000)
+                        .useExponentialBackOff()
+                        .logRetryStackTrace(true)
+                        .logStackTrace(true)
+                        .logHandled(true)
+                        .retryAttemptedLogLevel(LoggingLevel.WARN)
+                        .retriesExhaustedLogLevel(LoggingLevel.ERROR);
+
+                from(dataFeedStoreUri)
+                        .log("recieved data feed to store in persistence unit")
+                        .bean(feedService, "persistNotification")
+                        .log("data feed stored to database");
             }
         };
     }

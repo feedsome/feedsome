@@ -7,7 +7,7 @@ camel:
       dataFeedUri: "rabbitmq:///feedsome.plugin.feed?exchangeType=topic&autoDelete=false&durable=true&queue=fs-plugin-feed&autoAck=true&concurrentConsumers=10&deadLetterExchange=error&deadLetterExchangeType=topic&deadLetterRoutingKey=fs-plugin-feed&deadLetterQueue=fs-plugin-feed-error&connectionFactory=#customConnectionFactory"
       dataFeedProcessUri: "direct:feed:process"
       dataFeedSenderUri: "seda:feed:send"
-      dataFeedPublishUriRegex: "redis:///?command=PUBLISH&channels=${channels}&connectionFactory=#redisConnectionFactory"
+      dataFeedPublishUri: "redis:///?command=PUBLISH&connectionFactory=#redisConnectionFactory"
 
   connection:
     rabbitmq:

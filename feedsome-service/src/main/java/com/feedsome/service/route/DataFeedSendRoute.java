@@ -3,32 +3,32 @@ package com.feedsome.service.route;
 import com.fasterxml.jackson.databind.SerializationFeature;
 import com.fasterxml.jackson.datatype.jdk8.Jdk8Module;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
-import com.feedsome.model.Category;
-import com.feedsome.model.Feed;
+import com.feedsome.model.FeedNotification;
 import com.feedsome.service.route.configuration.EndpointProperties;
 import org.apache.camel.LoggingLevel;
 import org.apache.camel.builder.RouteBuilder;
 import org.apache.camel.component.jackson.JacksonDataFormat;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
+import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
 import javax.validation.ConstraintViolationException;
+import java.util.*;
 import java.util.stream.Collectors;
 
 @Configuration
 @EnableConfigurationProperties(EndpointProperties.class)
 public class DataFeedSendRoute {
-
-    private static final String CHANNELS_PARAM = "${channels}";
-    private static final String PUBLISH_URI_HEADER = "PUBLISH_URI";
-    private static final String publishUriHeaderExpression = String.format("${header.%s}", PUBLISH_URI_HEADER);
+    private static final String PUBLISH_TOPICS = "publishTopics";
+    private static final String TOPICS_COUNT = "topicsCount";
 
     @Autowired
     private EndpointProperties endpointProperties;
 
+    @Bean
     public RouteBuilder dataFeedSenderRouteBuilder() {
-        final JacksonDataFormat dataFormat = new JacksonDataFormat(Feed.class);
+        final JacksonDataFormat dataFormat = new JacksonDataFormat(FeedNotification.class);
 
         dataFormat.addModule(new JavaTimeModule());
         dataFormat.addModule(new Jdk8Module());
@@ -55,25 +55,31 @@ public class DataFeedSendRoute {
                         .retryAttemptedLogLevel(LoggingLevel.WARN)
                         .retriesExhaustedLogLevel(LoggingLevel.ERROR);
 
-                from(endpointProperties.getDataFeedSenderUri())
+                from(endpointProperties.getDataFeedSenderUri()).routeId("data feed notification sender")
                         .filter(body().isNotNull())
-                        .log("received data feed message to send")
+                        .log("received data feed message for the send process")
                         .process((processor) -> {
-                            final Feed messageBody = processor.getIn().getBody(Feed.class);
+                            final FeedNotification messageBody = processor.getIn().getBody(FeedNotification.class);
 
-                            final String channels = messageBody.getCategories().stream()
-                                    .map(Category::getName)
-                                    .collect(Collectors.joining(","));
+                            final Collection<String> categories = messageBody.getCategories();
 
-                            final String publishUri = endpointProperties.getDataFeedPublishUriRegex()
-                                    .replace(CHANNELS_PARAM, channels);
-
-                            processor.getIn().setHeader(PUBLISH_URI_HEADER, publishUri);
+                            processor.getIn().setHeader(TOPICS_COUNT, categories.size());
+                            processor.getIn().setHeader(PUBLISH_TOPICS, new ArrayList<>(categories));
                         })
                         .marshal(dataFormat)
-                        .log("data feed topics " + publishUriHeaderExpression)
-                        .recipientList(simple(publishUriHeaderExpression));
-                        //.recipientList(header(PUBLISH_URI_HEADER));
+                        .setHeader("CamelRedis.Message", simple("${body}"))
+                        .loop(header(TOPICS_COUNT))
+                            .process((processor) -> {
+                                final int loopIndex = processor.getProperty("CamelLoopIndex", Integer.class);
+
+                                List<String> channels = processor.getIn().getHeader(PUBLISH_TOPICS, ArrayList.class);
+
+                                processor.getIn().setHeader("CamelRedis.Channel", channels.get(loopIndex));
+                            })
+                            .log("data feed topic  ${header[CamelRedis.Channel]}")
+                            .to(endpointProperties.getDataFeedPublishUri())
+                        .end()
+                        .log("data feed sent to the specified topics");
             }
         };
 

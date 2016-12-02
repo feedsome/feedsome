@@ -18,6 +18,6 @@ public class EndpointProperties {
 
     private String dataFeedSenderUri = "seda:feed:send";
 
-    private String dataFeedPublishUriRegex;
+    private String dataFeedPublishUri;
 
 }

@@ -13,6 +13,8 @@ import org.springframework.validation.annotation.Validated;
 import javax.validation.constraints.NotNull;
 import java.util.Collection;
 import java.util.Optional;
+import java.util.Set;
+import java.util.stream.Collectors;
 
 @Validated
 public class FeedServiceImpl implements FeedService {
@@ -47,8 +49,7 @@ public class FeedServiceImpl implements FeedService {
                 .body(feedNotification.getBody())
                 .build();
 
-        final Collection<Category> categories = categoryRepository.findByNameIn(
-                feedNotification.getCategories());
+        final Collection<Category> categories = categoryRepository.findByNameIn(feedNotification.getCategories());
 
         feed.getCategories().addAll(categories);
 
