@@ -1,7 +1,5 @@
 package com.feedsome.service.exception;
 
-import lombok.Getter;
-
 /**
  * Error codes for {@link ServiceException}
  */

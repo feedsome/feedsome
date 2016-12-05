@@ -1,6 +1,7 @@
 package com.feedsome.service;
 
 import com.feedsome.model.Category;
+import com.feedsome.service.exception.DuplicateServiceException;
 import org.hibernate.validator.valuehandling.UnwrapValidatedValue;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -30,5 +31,5 @@ public interface CategoryService {
      */
     @NotNull
     @UnwrapValidatedValue
-    Optional<Category> create(@NotNull @Valid Category category);
+    Optional<Category> create(@NotNull @Valid Category category) throws DuplicateServiceException;
 }

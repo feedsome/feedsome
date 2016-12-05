@@ -6,8 +6,10 @@ import com.feedsome.model.FeedNotification;
 import com.feedsome.model.Plugin;
 import com.feedsome.service.FeedService;
 import com.feedsome.service.PluginService;
+import com.feedsome.service.route.component.FeedBuilderProcessor;
 import com.feedsome.service.route.configuration.EndpointProperties;
 import org.apache.camel.EndpointInject;
+import org.apache.camel.Processor;
 import org.apache.camel.ProducerTemplate;
 import org.apache.camel.component.mock.MockEndpoint;
 import org.apache.camel.spring.boot.CamelAutoConfiguration;
@@ -60,6 +62,11 @@ public class DataFeedRouteTester {
             return mock(FeedService.class);
         }
 
+        @Bean("feedBuilderProcessor")
+        public Processor feedBuilderProcessor() {
+            return new FeedBuilderProcessor();
+        }
+
         @Bean
         public EndpointProperties endpointProperties() {
             final EndpointProperties props = new EndpointProperties();
@@ -79,6 +86,8 @@ public class DataFeedRouteTester {
 
     @Autowired
     private FeedService feedService;
+
+    //private FeedBuilderProcessor feedBuilderProcessor;
 
     @EndpointInject(uri = "seda:feedsome:plugin:feed")
     private ProducerTemplate sendDataFeedTemplate;
@@ -122,13 +131,14 @@ public class DataFeedRouteTester {
         feedNotification.setTitle("fancy title goes here");
 
 
-        final Feed feed = Feed.builder().body(bodyString)
-                .title("fancy title goes here")
-                .plugin(new Plugin())
-                .id("32w4wffefef")
-                .build();
+        final Feed feed = new Feed();
+        feed.setBody(bodyString);
+        feed.setTitle("fancy title goes here");
+        feed.setPlugin(new Plugin());
+        feed.setId("32w4wffefef");
 
-        when(feedService.persistNotification(any(FeedNotification.class)))
+
+        when(feedService.persist(any(Feed.class)))
                 .thenReturn(feed);
 
         String feedNotificationMessage = mapper.writeValueAsString(feedNotification);
@@ -138,7 +148,7 @@ public class DataFeedRouteTester {
         mockEndpoint.expectedMessageCount(1);
         mockEndpoint.await(5L, TimeUnit.SECONDS);
 
-        verify(feedService, only()).persistNotification(any(FeedNotification.class));
+        verify(feedService, only()).persist(any(Feed.class));
 
     }
 

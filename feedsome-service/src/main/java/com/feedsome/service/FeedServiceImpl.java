@@ -2,11 +2,11 @@ package com.feedsome.service;
 
 import com.feedsome.model.Category;
 import com.feedsome.model.Feed;
-import com.feedsome.model.FeedNotification;
 import com.feedsome.model.Plugin;
 import com.feedsome.repository.CategoryRepository;
 import com.feedsome.repository.FeedRepository;
 import com.feedsome.repository.PluginRepository;
+import com.feedsome.service.exception.NotFoundServiceException;
 import org.hibernate.validator.valuehandling.UnwrapValidatedValue;
 import org.springframework.validation.annotation.Validated;
 
@@ -36,20 +36,25 @@ public class FeedServiceImpl implements FeedService {
     @Override
     @NotNull
     @UnwrapValidatedValue
-    public Feed persistNotification(@NotNull final FeedNotification feedNotification) {
-        final Optional<Plugin> plugin = pluginRepository.findByName(feedNotification.getPluginRef());
+    public Feed persist(@NotNull final Feed feedNotification) throws NotFoundServiceException {
+        final Optional<Plugin> plugin = pluginRepository.findByName(feedNotification.getPlugin().getName());
         if(!plugin.isPresent()) {
-            //TODO: handle (exception to send to dead channel)
-            throw new RuntimeException();
+            throw new NotFoundServiceException();
         }
 
-        final Feed feed = Feed.builder()
-                .plugin(plugin.get())
-                .title(feedNotification.getTitle())
-                .body(feedNotification.getBody())
-                .build();
+        final Set<String> categoryNames = feedNotification.getCategories().stream()
+                .map(Category::getName)
+                .collect(Collectors.toSet());
 
-        final Collection<Category> categories = categoryRepository.findByNameIn(feedNotification.getCategories());
+        final Collection<Category> categories = categoryRepository.findByNameIn(categoryNames);
+        if(categories.isEmpty()) {
+            throw new NotFoundServiceException();
+        }
+
+        final Feed feed = new Feed();
+        feed.setPlugin(plugin.get());
+        feed.setTitle(feedNotification.getTitle());
+        feed.setBody(feedNotification.getBody());
 
         feed.getCategories().addAll(categories);
 

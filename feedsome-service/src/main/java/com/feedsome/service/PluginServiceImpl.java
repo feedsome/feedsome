@@ -3,6 +3,8 @@ package com.feedsome.service;
 import com.feedsome.model.Plugin;
 import com.feedsome.model.PluginRegistration;
 import com.feedsome.repository.PluginRepository;
+import com.feedsome.service.exception.DuplicateServiceException;
+import com.feedsome.service.exception.NotFoundServiceException;
 import org.hibernate.validator.constraints.NotEmpty;
 import org.springframework.validation.annotation.Validated;
 
@@ -21,11 +23,10 @@ public class PluginServiceImpl implements PluginService {
 
     @Override
     @NotNull
-    public Plugin register(@NotNull @Valid final PluginRegistration pluginRegistration) {
+    public Plugin register(@NotNull @Valid final PluginRegistration pluginRegistration) throws DuplicateServiceException {
         final Optional<Plugin> persistedPlugin = pluginRepository.findByName(pluginRegistration.getName());
         if(persistedPlugin.isPresent()) {
-
-            // TODO: throw exception
+            throw new DuplicateServiceException();
         }
 
         final Plugin plugin = new Plugin();
@@ -37,11 +38,13 @@ public class PluginServiceImpl implements PluginService {
         return pluginRepository.save(plugin);
     }
 
-    public Plugin disableByName(@NotEmpty final String pluginName) {
+    @Override
+    @NotNull
+    public Plugin disableByName(@NotEmpty final String pluginName) throws NotFoundServiceException {
 
         final Optional<Plugin> persistedPlugin = pluginRepository.findByName(pluginName);
         if(!persistedPlugin.isPresent()) {
-            //TODO: throw exception if not found
+            throw new NotFoundServiceException();
         }
 
         final Plugin actualPlugin = persistedPlugin.get();
@@ -50,11 +53,13 @@ public class PluginServiceImpl implements PluginService {
         return pluginRepository.save(actualPlugin);
     }
 
-    //TODO: custom query with mongo template for this one!
-    public Plugin enableByName(@NotEmpty final String pluginName) {
+    @Override
+    @NotNull
+    public Plugin enableByName(@NotEmpty final String pluginName) throws NotFoundServiceException {
+        //TODO: custom query with mongo template for this one!
         final Optional<Plugin> persistedPlugin = pluginRepository.findByName(pluginName);
         if(!persistedPlugin.isPresent()) {
-            //TODO: throw exception if not found
+            throw new NotFoundServiceException();
         }
 
         final Plugin actualPlugin = persistedPlugin.get();

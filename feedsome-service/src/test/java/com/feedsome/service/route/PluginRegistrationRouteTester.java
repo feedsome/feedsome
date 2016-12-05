@@ -6,7 +6,6 @@ import com.feedsome.model.PluginRegistration;
 import com.feedsome.service.FeedService;
 import com.feedsome.service.PluginService;
 import com.feedsome.service.route.configuration.EndpointProperties;
-import com.feedsome.service.route.configuration.RoutesConfiguration;
 import org.apache.camel.EndpointInject;
 import org.apache.camel.ProducerTemplate;
 import org.apache.camel.component.mock.MockEndpoint;

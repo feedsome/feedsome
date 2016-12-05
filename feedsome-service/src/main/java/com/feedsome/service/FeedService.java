@@ -1,7 +1,7 @@
 package com.feedsome.service;
 
 import com.feedsome.model.Feed;
-import com.feedsome.model.FeedNotification;
+import com.feedsome.service.exception.NotFoundServiceException;
 
 import javax.validation.constraints.NotNull;
 
@@ -11,6 +11,6 @@ import javax.validation.constraints.NotNull;
 public interface FeedService {
 
     @NotNull
-    Feed persistNotification(@NotNull FeedNotification notification);
+    Feed persist(@NotNull Feed feedNotification) throws NotFoundServiceException;
 
 }

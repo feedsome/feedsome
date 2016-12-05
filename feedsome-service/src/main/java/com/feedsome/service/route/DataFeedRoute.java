@@ -8,9 +8,11 @@ import com.feedsome.service.FeedService;
 import com.feedsome.service.route.configuration.EndpointProperties;
 import org.apache.camel.ExchangePattern;
 import org.apache.camel.LoggingLevel;
+import org.apache.camel.Processor;
 import org.apache.camel.builder.RouteBuilder;
 import org.apache.camel.component.jackson.JacksonDataFormat;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -24,6 +26,10 @@ public class DataFeedRoute {
 
     @Autowired
     private EndpointProperties endpointProperties;
+
+    @Autowired
+    @Qualifier("feedBuilderProcessor")
+    private Processor feedBuilderProcessor;
 
     @Autowired
     private FeedService feedService;
@@ -87,8 +93,11 @@ public class DataFeedRoute {
 
                 from(dataFeedStoreUri)
                         .log("recieved data feed to store in persistence unit")
-                        .bean(feedService, "persistNotification")
-                        .log("data feed stored to database");
+                        .process(feedBuilderProcessor)
+                        .bean(feedService, "persist")
+                        .log("data feed stored to database")
+                        .setHeader("feed", simple("${body}"))
+                        .setBody(simple("${header.feedNotification}"));
             }
         };
     }

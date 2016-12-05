@@ -2,6 +2,7 @@ package com.feedsome.service;
 
 import com.feedsome.model.Category;
 import com.feedsome.repository.CategoryRepository;
+import com.feedsome.service.exception.DuplicateServiceException;
 import org.hibernate.validator.valuehandling.UnwrapValidatedValue;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -29,10 +30,10 @@ public class CategoryServiceImpl implements CategoryService {
     @Override
     @NotNull
     @UnwrapValidatedValue
-    public Optional<Category> create(@NotNull @Valid final Category category) {
+    public Optional<Category> create(@NotNull @Valid final Category category) throws DuplicateServiceException {
         final Optional<Category> persistedCategory = categoryRepository.findByNameIgnoreCase(category.getName());
         if(persistedCategory.isPresent()) {
-            // TODO: throw new exception
+            throw new DuplicateServiceException();
         }
 
         return Optional.ofNullable(categoryRepository.save(category));

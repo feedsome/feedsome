@@ -7,11 +7,6 @@ import org.springframework.data.annotation.TypeAlias;
 import org.springframework.data.mongodb.core.index.Indexed;
 import org.springframework.data.mongodb.core.mapping.Document;
 
-import javax.validation.constraints.NotNull;
-import java.util.Collection;
-import java.util.HashSet;
-import java.util.Set;
-
 @Data
 @Document(collection = "categories")
 @TypeAlias("category")

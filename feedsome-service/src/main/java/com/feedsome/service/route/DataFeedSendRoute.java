@@ -14,8 +14,9 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
 import javax.validation.ConstraintViolationException;
-import java.util.*;
-import java.util.stream.Collectors;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.List;
 
 @Configuration
 @EnableConfigurationProperties(EndpointProperties.class)
@@ -66,13 +67,15 @@ public class DataFeedSendRoute {
                             processor.getIn().setHeader(TOPICS_COUNT, categories.size());
                             processor.getIn().setHeader(PUBLISH_TOPICS, new ArrayList<>(categories));
                         })
+                        .log("trying to marshal notification to JSON format")
                         .marshal(dataFormat)
+                        .log("notification successfully marshaled to JSON")
                         .setHeader("CamelRedis.Message", simple("${body}"))
                         .loop(header(TOPICS_COUNT))
                             .process((processor) -> {
                                 final int loopIndex = processor.getProperty("CamelLoopIndex", Integer.class);
 
-                                List<String> channels = processor.getIn().getHeader(PUBLISH_TOPICS, ArrayList.class);
+                                final List<String> channels = processor.getIn().getHeader(PUBLISH_TOPICS, ArrayList.class);
 
                                 processor.getIn().setHeader("CamelRedis.Channel", channels.get(loopIndex));
                             })
