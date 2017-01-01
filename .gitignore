@@ -21,11 +21,7 @@ docs/site/
 ### Gradle ###
 .gradle/
 
-# Ignoring Gradle wrapper files (could be aquired by running 'gradle wrapper' task)
-gradle/
-gradlew
-gradlew.bat
-/build/
+**/build/
 
 # Ignore Gradle GUI config
 gradle-app.setting

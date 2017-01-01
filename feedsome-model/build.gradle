@@ -6,5 +6,5 @@ dependencies {
     compile('org.springframework.boot:spring-boot-starter-data-mongodb')
 
     // 3rd Party Dependencies
-    compileOnly('org.projectlombok:lombok:1.16.10')
+    compileOnly('org.projectlombok:lombok')
 }

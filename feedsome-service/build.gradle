@@ -8,19 +8,19 @@ dependencies {
     compile 'org.springframework.boot:spring-boot-starter-validation'
 
     // Camel dependencies
-    compile 'org.apache.camel:camel-spring-boot:2.18.0'
-    compile 'org.apache.camel:camel-rabbitmq:2.18.0'
-    compile 'org.apache.camel:camel-spring-redis:2.18.0'
-    compile 'org.apache.camel:camel-jackson:2.18.0'
+    compile 'org.apache.camel:camel-spring-boot'
+    compile 'org.apache.camel:camel-rabbitmq'
+    compile 'org.apache.camel:camel-spring-redis'
+    compile 'org.apache.camel:camel-jackson'
 
 
     // 3rd Party dependencies
-    compileOnly 'org.projectlombok:lombok:1.16.10'
-    compile 'commons-lang:commons-lang:2.6'
-    compile 'com.fasterxml.jackson.datatype:jackson-datatype-jdk8:2.8.5'
-    compile 'com.fasterxml.jackson.datatype:jackson-datatype-jsr310:2.8.5'
+    compileOnly 'org.projectlombok:lombok'
+    compile 'commons-lang:commons-lang'
+    compile 'com.fasterxml.jackson.datatype:jackson-datatype-jdk8'
+    compile 'com.fasterxml.jackson.datatype:jackson-datatype-jsr310'
 
     // Test dependencies
-    testCompile 'com.github.kstyrc:embedded-redis:0.6'
+    testCompile 'com.github.kstyrc:embedded-redis'
     testCompile 'org.springframework.boot:spring-boot-starter-test'
 }
