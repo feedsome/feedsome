@@ -4,7 +4,7 @@ buildscript {
         mavenCentral()
     }
     dependencies {
-        classpath "org.springframework.boot:spring-boot-gradle-plugin:${springBootVersion}"
+        classpath "org.springframework.boot:spring-boot-gradle-plugin:$springBootVersion"
         classpath "io.spring.gradle:dependency-management-plugin:0.5.3.RELEASE"
         classpath "com.palantir:jacoco-coverage:0.4.0"
     }
@@ -23,8 +23,8 @@ allprojects {
 
     group 'com.feedsome'
 
-    sourceCompatibility = "${javaVersion}"
-    targetCompatibility = "${javaVersion}"
+    sourceCompatibility = "$javaVersion"
+    targetCompatibility = "$javaVersion"
 
     repositories {
         mavenLocal()
