@@ -15,7 +15,7 @@ import java.util.TreeSet;
 @Document(collection = "plugins")
 @TypeAlias("plugin")
 public class Plugin {
-
+    
     @Id
     private String id;
 
