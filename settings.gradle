@@ -1,6 +1,8 @@
 rootProject.name = 'feedsome'
 include 'docs'
-include 'feedsome-model'
-include 'feedsome-repository'
-include 'feedsome-service'
+include 'model'
+include 'repository'
+include 'service'
+
+rootProject.children.each {it.name="${rootProject.name}-${it.name}"}
 
